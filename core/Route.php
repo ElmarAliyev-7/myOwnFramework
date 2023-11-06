@@ -6,7 +6,7 @@ class Route
 {
     public static function get(string $uri, array $controllerMethod)
     {
-        if($_SERVER['REQUEST_URI'] === $uri) {
+        if($_SERVER['REQUEST_URI'] === $uri || $_SERVER['REQUEST_URI'] === $uri . '/') {
             $controller = $controllerMethod[0];
             $method = $controllerMethod[1];
             $newController = new $controller;
