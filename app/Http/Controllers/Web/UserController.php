@@ -8,8 +8,8 @@ class UserController
 {
     public function index()
     {
-        $db = new DB;
-        return $db;
+        $users = DB::table('users')->get();
+        print_R($users);
     }
 
     public function create()
