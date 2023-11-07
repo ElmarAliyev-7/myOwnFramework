@@ -9,7 +9,7 @@ class UserController
     public function index()
     {
         $users = DB::table('users')->get();
-        print_R($users);
+        return view('web.users.index', ['users' => $users]);
     }
 
     public function create()
