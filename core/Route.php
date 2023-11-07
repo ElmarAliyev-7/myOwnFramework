@@ -56,11 +56,12 @@ class Route
         $checkKey = array_key_exists($uri, self::$routes[$method]);
         if(!$checkKey) return self::redirectNotFound();
 
+        //Check Class exists
+        if(!class_exists($controllerMethod[0])) return self::redirectNotFound();
+
         if($_SERVER['REQUEST_METHOD'] === $method
             and ($_SERVER['REQUEST_URI'] === $uri or $_SERVER['REQUEST_URI'] === $uri . '/')) {
             return 1;
         }
-        //Check Class exists
-        if(!class_exists($controllerMethod[0])) return self::redirectNotFound();
     }
 }
