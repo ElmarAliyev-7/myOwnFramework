@@ -18,13 +18,11 @@ class DB
     public function __construct()
     {
         try {
-            if(empty($this->conn)) {
-                // Check if the connection is already established
-                $this->conn = new PDO("mysql:host=$this->serverName;dbname=$this->dbName",
-                    $this->username, $this->password);
-                // set the PDO error mode to exception
-                $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            }
+            // Check if the connection is already established
+            $this->conn = new PDO("mysql:host=$this->serverName;dbname=$this->dbName",
+                $this->username, $this->password);
+            // set the PDO error mode to exception
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             echo "Connection failed: " . $e->getMessage();
         }
@@ -40,6 +38,6 @@ class DB
     {
         $sth = $this->conn->prepare("SELECT * FROM " . self::$table);
         $sth->execute();
-        return $sth->fetchAll();
+        return $sth->fetchAll(PDO::FETCH_ASSOC); // Fetch as associative array
     }
 }
