@@ -1,50 +1,34 @@
 <?php
-
 include_once 'resources/view/web/layouts/header.php';
 //Prepare html
-$html = "<form><div class='form-row'>";
-$html .= "<div class='form-group col-md-6'>";
-$html .= "<label for='inputEmail4'>Email</label><input type='email' class='form-control' id='inputEmail4' placeholder='Email'>";
-$html .= "</div>";
-$html .= "<div class='form-group col-md-6'>";
-$html .= "<label for='inputPassword4'>Password</label><input type='password' class='form-control' id='inputPassword4' placeholder='Password'>";
-$html .= "</div>";
-$html .= "</div>";
-$html .= "<div class='form-group'>";
-$html .= "<label for='inputAddress'>Address</label><input type='text' class='form-control' id='inputAddress' placeholder='1234 Main St'>";
-$html .= "</div>";
-$html .= "<div class='form-group'>";
-$html .= "<label for='inputAddress2'>Address 2</label>";
-$html .= "<input type='text' class='form-control' id='inputAddress2' placeholder='Apartment, studio, or floor'>";
-$html .= "</div>";
-$html .= "<div class='form-row'><div class='form-group col-md-6'>";
-$html .= "<label for='inputCity'>City</label><input type='text' class='form-control' id='inputCity'>";
-$html .= "</div>";
-$html .= "<div class='form-group col-md-4'>";
+$html = "<form class='container'>";
+    $html .= "<div class='form-group row' style='margin-right: 0px;'>";
+        $html .= "<h2 class='text-center'>Create User</h2>";
+
+        $html .= "<div class='form-group col-md-6'>";
+            $html .= "<label for='name'>Name</label><input type='text' class='form-control' id='name' placeholder='Name'>";
+        $html .= "</div>";
+
+        $html .= "<div class='form-group col-md-6'>";
+            $html .= "<label for='surname'>Surname</label><input type='text' class='form-control' id='name' placeholder='Surname'>";
+        $html .= "</div>";
+
+        $html .= "<div class='form-group col-md-6'>";
+            $html .= "<label for='inputPassword4'>Password</label><input type='password' class='form-control' id='inputPassword4' placeholder='Password'>";
+        $html .= "</div>";
+
+        $html .= "<div class='form-group col-md-2'>";
+            $html .= "<label for='avatar'>Avatar</label><input type='file' class='form-control' id='avatar'>";
+        $html .= "</div>";
+
+    $html .= "</div>";
+
+    $html .= "<div class='form-group row mt-2'>";
+        $html .= "<div class='col-sm-10'>";
+            $html .= "<button type='submit' class='btn btn-primary'>Sign in</button>";
+        $html .= "</div>";
+    $html .= "</div>";
+
 $html .= "</form>";
 echo $html;
-
-//    <div class="form-group col-md-4">
-//      <label for="inputState">State</label>
-//      <select id="inputState" class="form-control">
-//        <option selected>Choose...</option>
-//        <option>...</option>
-//      </select>
-//    </div>
-//    <div class="form-group col-md-2">
-//      <label for="inputZip">Zip</label>
-//      <input type="text" class="form-control" id="inputZip">
-//    </div>
-//  </div>
-//  <div class="form-group">
-//    <div class="form-check">
-//      <input class="form-check-input" type="checkbox" id="gridCheck">
-//      <label class="form-check-label" for="gridCheck">
-//Check me out
-//</label>
-//    </div>
-//  </div>
-//  <button type="submit" class="btn btn-primary">Sign in</button>
-//</form>
-
 include_once 'resources/view/web/layouts/footer.php';
