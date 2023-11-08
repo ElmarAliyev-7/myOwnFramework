@@ -6,6 +6,6 @@ class HomeController
 {
     public function index()
     {
-        echo 'homecontroller index method';
+        echo view('web.home');
     }
 }

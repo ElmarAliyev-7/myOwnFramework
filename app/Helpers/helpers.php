@@ -2,7 +2,7 @@
 
 use Core\View;
 
-function view(string $filePath, ?array $vars)
+function view(string $filePath, ?array $vars = null): void
 {
-    return View::render($filePath, $vars);
+    View::render($filePath, $vars);
 }
