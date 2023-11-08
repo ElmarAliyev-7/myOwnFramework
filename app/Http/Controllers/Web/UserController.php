@@ -14,6 +14,6 @@ class UserController
 
     public function create()
     {
-        echo 'create user';
+        return view('web.users.create');
     }
 }
