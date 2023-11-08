@@ -50,7 +50,7 @@ class DB
         return new self();
     }
 
-    public function get(): false|array
+    public function all(): false|array
     {
         $sth = $this->conn->prepare("SELECT * FROM " . self::$table);
         $sth->execute();
