@@ -7,42 +7,27 @@ use Exception;
 class Route
 {
     private static array $routes;
-    public static function get(string $uri, array $controllerMethod)
+
+    public static function get(string $uri, array $controllerMethod): void
     {
-        try {
-            $controller = $controllerMethod[0];
-            $method = $controllerMethod[1];
-
-            self::$routes['GET'][$uri] = ['controller' => $controller, 'method' => $method];
-
-            if(self::checkUri('GET', $uri, $controllerMethod) === 1) {
-                $newController = new $controller;
-                return $newController->$method();
-            } else {
-                return self::redirectNotFound();
-            }
-        } catch (Exception $exception) {
-            return $exception->getMessage();
-        }
+        self::$routes['GET'][$uri] = ['controller' => $controllerMethod[0], 'method' => $controllerMethod[1]];
     }
 
-    public static function post(string $uri, array $controllerMethod)
+    public static function post(string $uri, array $controllerMethod): void
     {
-        try {
-            $controller = $controllerMethod[0];
-            $method = $controllerMethod[1];
+        self::$routes['POST'][$uri] = ['controller' => $controllerMethod[0], 'method' => $controllerMethod[1]];
+    }
 
-            self::$routes['POST'][$uri] = ['controller' => $controller, 'method' => $method];
+    private static function getRequestUri(): string
+    {
+        $requestUri = $_SERVER['REQUEST_URI'];
+        if($requestUri !== '/' and str_ends_with($requestUri, '/')) $requestUri = substr($requestUri,0, -1);
+        return $requestUri;
+    }
 
-            if(self::checkUri('POST', $uri, $controllerMethod) === 1) {
-                $newController = new $controller;
-                return $newController->$method();
-            } else {
-                return self::redirectNotFound();
-            }
-        } catch (Exception $exception) {
-            return $exception->getMessage();
-        }
+    private static function getRequestMethod(): string
+    {
+        return $_SERVER['REQUEST_METHOD'];
     }
 
     private static function redirectNotFound()
@@ -50,18 +35,27 @@ class Route
         return header("http://127.0.0.1:8000/404", true, 404);
     }
 
-    private static function checkUri(string $method, string $uri, array $controllerMethod)
+    public static function dispatch()
     {
-        //Check Route exists
-        $checkKey = array_key_exists($uri, self::$routes[$method]);
-        if(!$checkKey) return self::redirectNotFound();
+        try {
+            $params = [];
+            foreach(self::$routes as $requestMethod => $route) {
+                //Check route exists
+                if(!array_key_exists(self::getRequestUri(), self::$routes[$requestMethod])) return self::redirectNotFound();
 
-        //Check Class exists
-        if(!class_exists($controllerMethod[0])) return self::redirectNotFound();
+                $controllerPath = self::$routes[$requestMethod][self::getRequestUri()]['controller'];
+                $method = self::$routes[$requestMethod][self::getRequestUri()]['method'];
 
-        if($_SERVER['REQUEST_METHOD'] === $method
-            and ($_SERVER['REQUEST_URI'] === $uri or $_SERVER['REQUEST_URI'] === $uri . '/')) {
-            return 1;
+                if(!class_exists($controllerPath)) return self::redirectNotFound(); //Check Class exists
+
+                if($requestMethod === self::getRequestMethod() and
+                    in_array(self::getRequestUri(), array_keys(self::$routes[$requestMethod]))) {
+                        $controller = new $controllerPath;
+                        return print_r(call_user_func_array([$controller, $method], $params));
+                }
+            }
+        } catch (Exception $exception) {
+            return $exception->getMessage();
         }
     }
 }

@@ -8,7 +8,7 @@ class UserController
 {
     public function index()
     {
-        $users = DB::table('users')->get();
+        $users = DB::table('users')->all();
         return view('web.users.index', ['users' => $users]);
     }
 
