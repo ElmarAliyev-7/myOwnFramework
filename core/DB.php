@@ -7,19 +7,17 @@ use PDOException;
 
 class DB
 {
-    private string $serverName = 'localhost';
-    private string $dbName = 'my_own_framework';
-    private string $username = 'root';
-    private string $password = '';
-    private static DB $instance;
     public PDO $conn;
-    private static string $table;
+    private string $table;
+    private string $query;
+    private string $select;
 
     public function __construct()
     {
         try {
             // Check if the connection is already established
-            $this->conn = new PDO("mysql:host=$this->serverName;dbname=$this->dbName", $this->username, $this->password);
+            $this->conn = new PDO("mysql:host=" . serverName . ";dbname=" . dbName, dbUsername,
+                dbPassword);
             // set the PDO error mode to exception
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
@@ -27,33 +25,28 @@ class DB
         }
     }
 
-    public static function __callStatic($name, $arguments)
+    private function prepare()
     {
-        $instance = self::getInstance();
-        if (method_exists($instance, $name)) {
-            return call_user_func_array([$instance, $name], $arguments);
-        }
-        // If the method doesn't exist, you can set properties or perform other actions here if needed.
+        $this->query = '';
     }
 
-    public static function getInstance(): DB
+    public function table(string $tableName): static
     {
-        if (self::$instance === null) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-
-    public static function table(string $tableName): DB
-    {
-        self::$table = $tableName;
-        return new self();
+        $this->table = $tableName;
+        return $this;
     }
 
     public function all(): false|array
     {
-        $sth = $this->conn->prepare("SELECT * FROM " . self::$table);
+        $sth = $this->conn->prepare("SELECT * FROM " . $this->table);
         $sth->execute();
         return $sth->fetchAll(PDO::FETCH_ASSOC); // Fetch as associative array
+    }
+
+    public function get(): false|array
+    {
+        $sth = $this->conn->prepare("SELECT * FROM " . $this->table);
+        $sth->execute();
+        return $sth->fetchAll(PDO::FETCH_ASSOC); // Fetch as associative array;
     }
 }
