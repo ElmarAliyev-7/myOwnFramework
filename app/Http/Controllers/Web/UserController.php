@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Web;
 
-use Core\DB;
+use App\Models\User;
 
 class UserController
 {
     public function index()
     {
-        $users = DB::table('users')->all();
+        $users = User::all();
         return view('web.users.index', ['users' => $users]);
     }
 
