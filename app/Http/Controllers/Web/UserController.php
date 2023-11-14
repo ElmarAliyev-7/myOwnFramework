@@ -11,7 +11,7 @@ class UserController
     {
 //        $users = User::all();
         $instance = new DB;
-        return $users = $instance->table("users")->all();
+        return $users = $instance->table("users")->select("id", "name", "surname")->get();
 
         return view('web.users.index', ['users' => $users]);
     }

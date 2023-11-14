@@ -9,8 +9,8 @@ class DB
 {
     public PDO $conn;
     private string $table;
-    private string $query;
-    private string $select;
+    private string $query = "";
+    private string $select = "";
 
     public function __construct()
     {
@@ -25,14 +25,21 @@ class DB
         }
     }
 
-    private function prepare()
-    {
-        $this->query = '';
-    }
-
     public function table(string $tableName): static
     {
         $this->table = $tableName;
+        return $this;
+    }
+
+    public function select(...$params): static
+    {
+        $select = "SELECT ";
+        foreach ($params as $key => $param) {
+            $select .= $param;
+            if(count($params) - 1 > $key) $select .= ",";
+        }
+        $select .= " FROM " . $this->table;
+        $this->select = $select;
         return $this;
     }
 
@@ -40,13 +47,16 @@ class DB
     {
         $sth = $this->conn->prepare("SELECT * FROM " . $this->table);
         $sth->execute();
-        return $sth->fetchAll(PDO::FETCH_ASSOC); // Fetch as associative array
+        return $sth->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function get(): false|array
     {
-        $sth = $this->conn->prepare("SELECT * FROM " . $this->table);
+        $query = "SELECT * FROM " . $this->table;
+        if(!empty($this->select)) $query = $this->select;
+
+        $sth = $this->conn->prepare($query);
         $sth->execute();
-        return $sth->fetchAll(PDO::FETCH_ASSOC); // Fetch as associative array;
+        return $sth->fetchAll(PDO::FETCH_ASSOC);
     }
 }
