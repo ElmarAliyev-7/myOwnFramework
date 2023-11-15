@@ -9,8 +9,8 @@ class DB
 {
     public PDO $conn;
     private string $table;
-    private string $query = "";
     private string $select = "";
+    private string $where = "";
 
     public function __construct()
     {
@@ -43,17 +43,37 @@ class DB
         return $this;
     }
 
+    public function where(array|string $column, $value = null): static
+    {
+        if(!is_array($column)) {
+            $this->where .= " WHERE " . $column . "=" . "'$value'";
+            return $this;
+        }
+
+        $this->where = " WHERE";
+        foreach ($column as $key => $value) :
+            $this->where .= " " . $key . "=" . "'$value' AND";
+        endforeach;
+        $this->where = substr($this->where, 0, -3);
+        return $this;
+
+    }
+
     public function all(): false|array
     {
-        $sth = $this->conn->prepare("SELECT * FROM " . $this->table);
+        $query = "SELECT * FROM " . $this->table;
+        if(!empty($this->where)) $query .= $this->where;
+
+        $sth = $this->conn->prepare($query);
         $sth->execute();
         return $sth->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function get(): false|array
+    public function get()
     {
         $query = "SELECT * FROM " . $this->table;
         if(!empty($this->select)) $query = $this->select;
+        if(!empty($this->where)) $query .= $this->where;
 
         $sth = $this->conn->prepare($query);
         $sth->execute();
